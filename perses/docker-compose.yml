@@ -1,0 +1,15 @@
+services:
+  perses:
+    image: persesdev/perses:v0.45
+    #user: nobody
+    command:
+      - --config=/etc/perses/config.yaml
+      - --log.level=debug
+    ports:
+      - "8888:8080"
+    extra_hosts:
+      # This allows access from inside the Grafana container to the local machine
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - ./config.yaml:/etc/perses/config.yaml
+      - ./data:/provisioning

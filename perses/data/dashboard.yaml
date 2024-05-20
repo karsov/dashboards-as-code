@@ -1,0 +1,164 @@
+kind: Dashboard
+metadata:
+    name: Demo
+    project: Demo
+spec:
+    display:
+        name: Demo Dashboard
+    panels:
+        MemoryInUse:
+            kind: Panel
+            spec:
+                display:
+                    name: Memory In Use
+                plugin:
+                    kind: TimeSeriesChart
+                    spec:
+                        legend:
+                            mode: list
+                            position: bottom
+                        visual:
+                            display: line
+                            lineWidth: 1
+                        yAxis:
+                            format:
+                                unit: bytes
+                queries:
+                    - kind: TimeSeriesQuery
+                      spec:
+                        plugin:
+                            kind: PrometheusTimeSeriesQuery
+                            spec:
+                                datasource:
+                                    kind: PrometheusDatasource
+                                    name: Prometheus
+                                query: go_memstats_heap_inuse_bytes
+                                minStep: "15s"
+        Goroutines:
+            kind: Panel
+            spec:
+                display:
+                    name: Goroutines
+                plugin:
+                    kind: TimeSeriesChart
+                    spec:
+                        legend:
+                            mode: list
+                            position: bottom
+                        visual:
+                            display: line
+                            lineWidth: 1
+                queries:
+                    - kind: TimeSeriesQuery
+                      spec:
+                        plugin:
+                            kind: PrometheusTimeSeriesQuery
+                            spec:
+                                datasource:
+                                    kind: PrometheusDatasource
+                                    name: Prometheus
+                                query: go_goroutines
+                                minStep: "15s"
+        DetailedMemory:
+            kind: Panel
+            spec:
+                display:
+                    name: Detailed Memory
+                plugin:
+                    kind: TimeSeriesChart
+                    spec:
+                        visual:
+                            areaOpacity: 0.3
+                            connectNulls: false
+                            lineWidth: 1.5
+                            pointRadius: 3
+                            stack: all
+                queries:
+                    - kind: TimeSeriesQuery
+                      spec:
+                        plugin:
+                            kind: PrometheusTimeSeriesQuery
+                            spec:
+                                query: go_memstats_stack_inuse_bytes
+                                seriesNameFormat: Goroutine Stacks
+                                minStep: "15s"
+                    - kind: TimeSeriesQuery
+                      spec:
+                        plugin:
+                            kind: PrometheusTimeSeriesQuery
+                            spec:
+                                query: go_memstats_heap_alloc_bytes
+                                seriesNameFormat: Heap Live & Dead Objects
+                                minStep: "15s"
+                    - kind: TimeSeriesQuery
+                      spec:
+                        plugin:
+                            kind: PrometheusTimeSeriesQuery
+                            spec:
+                                query: go_memstats_heap_inuse_bytes - go_memstats_heap_alloc_bytes
+                                seriesNameFormat: Heap Reserve
+                                minStep: "15s"
+                    - kind: TimeSeriesQuery
+                      spec:
+                        plugin:
+                            kind: PrometheusTimeSeriesQuery
+                            spec:
+                                query: go_memstats_gc_sys_bytes
+                                seriesNameFormat: GC Overhead
+                                minStep: "15s"
+                    - kind: TimeSeriesQuery
+                      spec:
+                        plugin:
+                            kind: PrometheusTimeSeriesQuery
+                            spec:
+                                query: go_memstats_other_sys_bytes
+                                seriesNameFormat: Runtime Overhead
+                                minStep: "15s"
+                    - kind: TimeSeriesQuery
+                      spec:
+                        plugin:
+                            kind: PrometheusTimeSeriesQuery
+                            spec:
+                                query: go_memstats_buck_hash_sys_bytes
+                                seriesNameFormat: Profiler Overhead
+                                minStep: "15s"
+                    - kind: TimeSeriesQuery
+                      spec:
+                        plugin:
+                            kind: PrometheusTimeSeriesQuery
+                            spec:
+                                query: go_memstats_mspan_inuse_bytes
+                                seriesNameFormat: Allocator Overhead - mspan
+                                minStep: "15s"
+                    - kind: TimeSeriesQuery
+                      spec:
+                        plugin:
+                            kind: PrometheusTimeSeriesQuery
+                            spec:
+                                query: go_memstats_mcache_inuse_bytes
+                                seriesNameFormat: Allocator Overhead - mcache
+                                minStep: "15s"
+    layouts:
+        - kind: Grid
+          spec:
+            items:
+                - x: 0
+                  "y": 0
+                  width: 12
+                  height: 8
+                  content:
+                    $ref: '#/spec/panels/MemoryInUse'
+                - x: 12
+                  "y": 0
+                  width: 12
+                  height: 8
+                  content:
+                    $ref: '#/spec/panels/Goroutines'
+                - x: 0
+                  "y": 8
+                  width: 12
+                  height: 6
+                  content:
+                    $ref: '#/spec/panels/DetailedMemory'
+    duration: 30m
+    refreshInterval: 15s

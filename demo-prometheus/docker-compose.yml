@@ -1,0 +1,16 @@
+services:
+  app:
+    image: golang:1-alpine
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./demo-app:/app
+    command: sh -c "cd /app && go run main.go"
+  prometheus:
+    image: quay.io/prometheus/prometheus:v2.52.0
+    depends_on:
+      - app
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus-config.yml:/etc/prometheus/prometheus.yml

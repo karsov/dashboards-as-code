@@ -1,0 +1,13 @@
+services:
+  grafana:
+    image: grafana/grafana-oss:10.3.5
+    ports:
+      - "3000:3000"
+    extra_hosts:
+      # This allows access from inside the Grafana container to the local machine
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - ./grafana.ini:/etc/grafana/grafana.ini
+      - ./datasource.yaml:/etc/grafana/provisioning/datasources/prometheus.yaml
+      - ./provider.yaml:/etc/grafana/provisioning/dashboards/provider.yaml
+      - ./dashboard.json:/var/lib/grafana/dashboards/dashboard.json
