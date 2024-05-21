@@ -27,7 +27,7 @@ For this demo those files plus a Docker Compose file are located in the `grafana
 
 Perses is a new open-source solution for observability data visualization.
 Although it was released pretty recently (in the end of 2022), it is already supported by [The Linux Foundation](https://www.linuxfoundation.org/).
-Compared to Grafana, Perses's data model is clear and flexible (with support for JSON and YAML), and editing a dashboard's code is easy.
+Compared to Grafana, Perses's data model is [clear and flexible](https://perses.dev/docs/perses/v0.45.0/api/dashboard.md/) (with support for JSON and YAML), and editing a dashboard's code is easy.
 It also provides npm packages so that anyone can embed charts and dashboards in their own UI.
 On the downside, being a very young project means that it lacks some features: the currently supported data sources are only Prometheus and Grafana Tempo, and the choice of chart types is limited.
 
