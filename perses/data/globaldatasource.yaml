@@ -6,4 +6,7 @@ spec:
     plugin:
         kind: PrometheusDatasource
         spec:
-            directUrl: http://localhost:9090
+            proxy:
+                kind: HTTPProxy
+                spec:
+                    url: http://host.docker.internal:9090
